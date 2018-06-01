@@ -2,7 +2,12 @@
 title: "Bookdown Requirements"
 author: "Nathan Malmberg"
 date: "5/31/2018"
-output: bookdown::html_book
+site: "bookdown::bookdown_site"
+output: 
+  bookdown::gitbook:
+    self_contained: TRUE
+    split_by: "none"
+    number_sections: FALSE
 ---
 # Chapter Title
 ```{r setup, include=FALSE}
