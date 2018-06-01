@@ -2,7 +2,6 @@
 title: "Bookdown Requirements"
 author: "Nathan Malmberg"
 date: "5/31/2018"
-site: "bookdown::bookdown_site"
 output: 
   bookdown::gitbook:
     self_contained: TRUE
