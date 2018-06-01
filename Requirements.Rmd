@@ -8,7 +8,7 @@ output:
     split_by: "none"
     number_sections: FALSE
 ---
-# Chapter Title
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
