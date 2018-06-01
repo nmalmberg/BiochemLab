@@ -27,8 +27,10 @@ summary(cars)
 
 You can also embed plots, for example:
 
-```{r pressure, echo=FALSE}
+(ref:pressure) Plot of pressure (open circles) as a function of temperature for a sample of air. 
+
+```{r pressure, echo=FALSE, fig.cap='(ref:pressure)'}
 plot(pressure)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Note that the `echo = FALSE` parameter was added to the code chunk producing Figure \@ref(fig:pressure) to prevent printing of the R code that generated the plot.
