@@ -32,3 +32,15 @@ plot(pressure)
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk producing Figure \@ref(fig:pressure) to prevent printing of the R code that generated the plot.
+
+## Equations
+
+RMarkdown can also include equations. These are entered using LaTeX format.
+
+\begin{equation}
+  [P]_{bound}=\frac{[P]_{total}[L]^n}{[L]^n+[L]_{0.5}^n}
+  (\#eq:hill)
+\end{equation}
+
+If the equation is appropriately labeled, the equation will be numbered. References to the equations, like to Equation \@ref(eq:hill), should also work.
+
