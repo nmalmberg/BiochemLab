@@ -27,10 +27,12 @@ summary(cars)
 
 You can also embed plots, for example:
 
-(ref:pressure) Plot of pressure (open circles) as a function of temperature for a sample of air. 
+(ref:pressure) Plot of vapor pressure (open circles) as a function of temperature for mercury. 
 
 ```{r pressure, echo=FALSE, fig.cap='(ref:pressure)'}
-plot(pressure)
+plot(pressure, xlab=expression(paste("Temperature (",degree*C,
+                                     ")")),
+     ylab="Pressure (mm Hg)")
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk producing Figure \@ref(fig:pressure) to prevent printing of the R code that generated the plot [@R-base].
