@@ -6,6 +6,7 @@ output:
   bookdown::html_document2:
     number_sections: FALSE
 bibliography: knitr.bib
+csl: american-chemical-society.csl
 ---
 
 ```{r setup, include=FALSE}
