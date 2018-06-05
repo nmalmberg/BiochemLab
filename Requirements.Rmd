@@ -3,9 +3,7 @@ title: "Bookdown Requirements"
 author: "Nathan Malmberg"
 date: "5/31/2018"
 output: 
-  bookdown::gitbook:
-    self_contained: TRUE
-    split_by: "none"
+  bookdown::html_document2:
     number_sections: FALSE
 ---
 
