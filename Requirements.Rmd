@@ -5,6 +5,7 @@ date: "5/31/2018"
 output: 
   bookdown::html_document2:
     number_sections: FALSE
+bibliography: knitr.bib
 ---
 
 ```{r setup, include=FALSE}
@@ -15,7 +16,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this [@R-knitr]:
 
 ```{r cars}
 summary(cars)
@@ -31,7 +32,7 @@ You can also embed plots, for example:
 plot(pressure)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk producing Figure \@ref(fig:pressure) to prevent printing of the R code that generated the plot.
+Note that the `echo = FALSE` parameter was added to the code chunk producing Figure \@ref(fig:pressure) to prevent printing of the R code that generated the plot [@R-base].
 
 ## Equations
 
@@ -43,4 +44,11 @@ RMarkdown can also include equations. These are entered using LaTeX format.
 \end{equation}
 
 If the equation is appropriately labeled, the equation will be numbered. References to the equations, like to Equation \@ref(eq:hill), should also work.
+
+## References
+
+```{r}
+knitr::write_bib(c("base", "knitr"), "knitr.bib")
+```
+
 
