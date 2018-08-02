@@ -37,6 +37,18 @@ plot(pressure, xlab=expression(paste("Temperature (",degree*C,
 
 Note that the `echo = FALSE` parameter was added to the code chunk producing Figure \@ref(fig:pressure) to prevent printing of the R code that generated the plot [@R-base].
 
+If you have an image to include, rather than a plot to create from data, there are Markdown commands to include images.
+
+![(ref:acids)](adnly.png)
+
+(ref:acids) Five amino acids with very different solubilities in water. From left, alanine, aspartate, asparagine, leucine, tyrosine.
+
+It might take advantage of more of the features of knitr, though, to use another of the knitr helper functions in an R code block.
+```{r acids, fig.cap='(ref:acids)'}
+knitr::include_graphics('adnly.png', dpi=NA)
+```
+
+
 ## Equations
 
 RMarkdown can also include equations. These are entered using LaTeX format.
