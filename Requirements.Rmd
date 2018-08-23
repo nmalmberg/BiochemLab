@@ -5,7 +5,7 @@ date: "5/31/2018"
 output: 
   bookdown::html_document2:
     number_sections: FALSE
-bibliography: knitr.bib
+bibliography: [knitr.bib, references.bib]
 csl: american-chemical-society.csl
 ---
 
@@ -35,7 +35,7 @@ plot(pressure, xlab=expression(paste("Temperature (",degree*C,
      ylab="Pressure (mm Hg)")
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk producing Figure \@ref(fig:pressure) to prevent printing of the R code that generated the plot [@R-base].
+Note that the `echo = FALSE` parameter [@gagnon_fluorine-tagged_2010] was added to the code chunk producing Figure \@ref(fig:pressure) to prevent printing of the R code that generated the plot [@R-base].
 
 If you have an image to include, rather than a plot to create from data, there are Markdown commands to include images.
 
