@@ -23,6 +23,8 @@ When you click the **Knit** button a document will be generated that includes bo
 knitr::kable(summary(cars), caption="Statistical summary of the data in the built-in data frame cars.")
 ```
 
+Sometimes you may need to include some modified fonts, to discuss topics like the &pi;-electrons of C~6~H~6~.
+
 ## Including Plots
 
 You can also embed plots, for example:
