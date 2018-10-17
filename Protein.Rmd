@@ -1,0 +1,75 @@
+---
+title: "Protein Purification Functions"
+author: "Nathan Malmberg"
+date: "10/15/2018"
+output: 
+  bookdown::html_document2:
+    number_sections: FALSE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Absorbance Data
+
+Use the following code block to record the absorbance of the fractions from the size exclusion columns. Keep track of which column as well as the fraction number and absorbance.
+
+```{r absorbancedata}
+absorbance <- read.table(header=TRUE, text="
+Column   Fraction   Absorbance
+")
+```
+
+You can then plot the data with the following block, adding lines and adjusting the position of the legend as necessary.
+
+```{r absorbanceplot, fig.cap="Protein content of size exclusion fractions. Absorbance at 280 nm is plotted as a function of fraction number for two Sephadex G-50 columns loaded with milk whey and eluted with 0.02 M Tris buffer, pH 8.0."}
+plot(Absorbance~Fraction, data=absorbance, type="n",
+     xlab="Fraction number",
+     ylab = expression(A[280]))
+lines(Absorbance~Fraction, data=absorbance, lty=1,
+      subset=(Column=="A"))
+legend(1,0.2,legend=c("A"),lty=1)
+```
+
+## Gel Data
+
+To include an image of your gel, use a code block like the one in Figure @ref[fig:gelimage]. Make sure the gel image has been saved in the same folder as your Markdown document.
+
+```{r gelimage, fig.cap="SDS-PAGE of protein purification steps. From left to right, molecular weight standard, etc."}
+knitr::include_graphics("nameoffile.jpg", dpi=NA)
+```
+
+The gel imager can measure the migration distance of gel bands relative to each other. The CSV file that the imager software outputs is not very well-behaved, but we can use R to extract the necessary information from the file and add the appropriate molecular weights to the standard file.
+
+```{r mwdet}
+csvlines <- readLines(file.choose())
+# We need to select the lines between "Bands:" and "Concentration:"
+bands <- grep("Bands:", csvlines, fixed=TRUE, value=FALSE) + 2
+conc <- grep("^Concentration:", csvlines, fixed=FALSE,
+             value=FALSE) - 3
+geldata <- read.delim(header=TRUE, row.names = 2,
+                      text=paste(csvlines[bands:conc],
+                                 collapse="\n"))
+# Replace the MW column with NA for most of the bands, and with
+# the appropriate MW for the ladder bands.
+geldata$MW <- NA
+geldata["A3", "MW"] <- 170 # Etc.
+
+# Fit the data to a straight line, with a logarithmic scaling
+# of the MW data.
+mwmodel <- glm(MW~Rf, data=geldata, family=gaussian(link=log))
+
+# Use the model to predict the molecular weights of the bands
+# from other lanes. Include standard errors of the weights.
+predict(mwmodel, newdata=subset(geldata, Lane.ID!="A"),
+        type="response", se.fit=TRUE)
+```
+
+The plot below will show how the ladder data fits to the model. This is not necessary for the calculation, but it can be reassuring to see that the data fits.
+
+```{r}
+plot(log(MW)~Rf, data=geldata)
+abline(mwmodel)
+```
+
