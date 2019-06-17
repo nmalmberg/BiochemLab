@@ -68,7 +68,7 @@ predict(mwmodel, newdata=subset(geldata, Lane.ID!="A"),
 
 The plot below will show how the ladder data fits to the model. This is not necessary for the calculation, but it can be reassuring to see that the data fits.
 
-```{r}
+```{r eval=FALSE, include=FALSE}
 plot(log(MW)~Rf, data=geldata)
 abline(mwmodel)
 ```
