@@ -16,9 +16,7 @@ knitr::opts_chunk$set(echo = TRUE)
 Use the following code block to record the absorbance of the fractions from the size exclusion columns. Keep track of which column as well as the fraction number and absorbance.
 
 ```{r absorbancedata}
-absorbance <- read.table(header=TRUE, text="
-Column   Fraction   Absorbance
-")
+absorbance <- read.table("absorbance.dat", header=TRUE)
 ```
 
 You can then plot the data with the following block, adding lines and adjusting the position of the legend as necessary.
