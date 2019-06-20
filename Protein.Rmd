@@ -5,6 +5,8 @@ date: "10/15/2018"
 output: 
   bookdown::html_document2:
     number_sections: FALSE
+bibliography: [knitr.bib, references.bib]
+csl: american-chemical-society.csl
 ---
 
 ```{r setup, include=FALSE}
@@ -71,3 +73,10 @@ plot(log(MW)~Rf, data=geldata)
 abline(mwmodel)
 ```
 
+Your lab report should include a bibliography, of course.
+
+```{r bibliography, include=FALSE}
+knitr::write_bib("base", "knitr.bib")
+```
+
+## References
