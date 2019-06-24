@@ -1,0 +1,60 @@
+---
+title: "A Better Title Than Pipetting"
+author: "Nathan Malmberg"
+date: "6/24/2019"
+output:
+  bookdown::html_document2:
+    number_sections: FALSE
+bibliography: [knitr.bib, references.bib]
+csl: american-chemical-society.csl
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Results
+
+Put all of your data into the code block below, in the read.table function. Also,
+edit the lm functions to reflect the specific pipetters you've used for your data.
+When you write, don't treat the code block as a figure or table; it won't be
+labeled as one, and it exists primarily so your instructor knows that you've done
+the calculations correctly. You should include a reference to the worksheet and to
+R in this paragraph, since you won't have a Methods section in this lab.
+
+```{r Calculations}
+pipetteframe <- read.table(header=TRUE, text="
+Pipette   Volume   Before   After")
+pipetteframe$Mass <- pipetteframe$After - pipetteframe$Before
+biglm <- lm(Mass ~ Volume, data=pipetteframe, subset=(Pipette=="1000D"))
+summary(biglm)
+littlelm <- lm(Mass ~ Volume, data=pipetteframe, subset=(Pipette=="100A"))
+summary(littlelm)
+```
+
+Be sure to edit the code below to properly subset your two pipetters.
+
+```{r Plot, fig.cap="(ref:plot)"}
+plot(Mass ~ Volume, data=pipetteframe, type="n",
+     xlab=expression(paste("Volume (", mu, "L)")),
+     ylab="Mass (g)")
+points(Mass ~ Volume, data=pipetteframe, pch=21, subset=(Pipette=="1000D"))
+points(Mass ~ Volume, data=pipetteframe, pch=23, subset=(Pipette=="100A"))
+abline(biglm, lty=1)
+abline(littlelm, lty=2)
+legend(0,1,legend=c("1000D","100A"),pch=c(21,23), lty=1:2)
+```
+
+(ref:plot) Put a descriptive caption for your plot here.
+
+Write your results here. Make sure to incorporate the concepts from the questions
+in the handout, but structure the concepts in paragraph form, referring to the plot
+as appropriate.
+
+## References
+
+```{r include=FALSE}
+knitr::write_bib("base", "knitr.bib")
+```
+
+
