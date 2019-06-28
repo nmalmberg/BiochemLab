@@ -43,7 +43,7 @@ knitr::include_graphics("nameoffile.jpg", dpi=NA)
 The gel imager can measure the migration distance of gel bands relative to each other. The CSV file that the imager software outputs is not very well-behaved, but we can use R to extract the necessary information from the file and add the appropriate molecular weights to the standard file.
 
 ```{r mwdet}
-csvlines <- readLines(file.choose())
+csvlines <- readLines("GelFile.csv")
 # We need to select the lines between "Bands:" and "Concentration:"
 bands <- grep("Bands:", csvlines, fixed=TRUE, value=FALSE) + 2
 conc <- grep("^Concentration:", csvlines, fixed=FALSE,
