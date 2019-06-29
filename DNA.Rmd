@@ -1,0 +1,124 @@
+---
+title: "Pertaining to SNPs"
+author: "Nathan Malmberg"
+date: "6/28/2019"
+output: 
+  bookdown::html_document2:
+    number_sections: FALSE
+bibliography: [knitr.bib, references.bib]
+csl: american-chemical-society.csl
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+You will need to install one (or two) additional package(s) in order to analyze
+your sequencing data (at least to make it easier to read and represent). The
+following code block only needs to be run once.
+
+```{r installation, eval=FALSE, include=FALSE}
+if (!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+
+BiocManager::install("Biostrings")
+```
+
+This lab report will require an introduction that has at least two citations
+of the primary literature, so be sure to add those to the references.bib file.
+You will presumably be using a protocol for isolating your DNA that also needs
+to be cited, so be sure to add those to the file, as well.
+
+The following code block will help you keep track of your PCR samples. This way,
+you can put a number on each tube, and keep track of the various information
+associated with each sample. Student name should not have any spaces (last name
+is probably sufficient). For the primer, use the NCBI identifier for the SNP
+amplified by the primer set. Refer to the gel either by letter or number, and
+refer to the lane by number. The OMRF label should be distinct, and should
+include the string "OBU", but shouldn't include nonalphanumeric characters.
+For the samples you don't send to OMRF, put NA in for the OMRF column.
+
+```{r pcr, include=FALSE}
+pcrdata <- read.table(header = TRUE, text = "
+Tube    Student    Primer    Gel    Lane    OMRF")
+```
+
+If you measure the migration of bands on your gel using the imaging software, the
+code block below can help you calculate the number of bases in the PCR products.
+
+```{r mwdet}
+csvlines <- readLines("GelFile.csv")
+# We need to select the lines between "Bands:" and "Concentration:"
+bands <- grep("Bands:", csvlines, fixed=TRUE, value=FALSE) + 2
+conc <- grep("^Concentration:", csvlines, fixed=FALSE,
+             value=FALSE) - 3
+geldata <- read.delim(header=TRUE, row.names = 2,
+                      text=paste(csvlines[bands:conc],
+                                 collapse="\n"))
+# Replace the MW column with NA for most of the bands, and with
+# the appropriate MW for the ladder bands.
+geldata$MW <- NA
+geldata["A3", "MW"] <- 170 # Etc.
+
+# Fit the data to a straight line, with a logarithmic scaling
+# of the MW data.
+mwmodel <- glm(MW~Rf, data=geldata, family=gaussian(link=log))
+
+# Use the model to predict the molecular weights of the bands
+# from other lanes. Include standard errors of the weights.
+predict(mwmodel, newdata=subset(geldata, Lane.ID!="A"),
+        type="response", se.fit=TRUE)
+```
+
+You can use the code block below to include an image of a gel, if it would
+be helpful. If you use more than one gel picture, you'll need to change the
+filename into a vector of filenames.
+
+```{r gelimage, fig.cap='(text:gelimage)', out.width="100%"}
+knitr::include_graphics("GelImage.JPG",dpi=NA)
+```
+
+(text:gelimage) Make sure you describe the contents of each lane in this figure caption, assuming you are planning to include the figure.
+
+The code block below should generate a figure with the sequences returned from OMRF
+aligned to the sequences we should have got from amplification with those primers.
+You'll probably still have to work to figure out which base is the SNP, but this
+should make it easier once you know what you're looking for.
+
+```{r alignment, fig.cap="(text:alignment)"}
+# Select PCR tubes that were sent to OMRF
+omrf <- subset(pcrdata, !is.NA(OMRF))
+# Remove primers, etc. that weren't sent to OMRF
+droplevels(omrf) -> omrf
+# Go through each primer, and read in files corresponding to the
+# reference sequence and to the files returned from OMRF
+for (primer in levels(omrf$Primer)){
+  referencefile <- paste(primer, ".fasta")
+  if (file.exists(referencefile)){
+    # Select all filenames corresponding to samples sent to OMRF
+    # corresponding to this primer.
+    fileexp <- paste0("(", omrf$OMRF[omrf$Primer==primer],")", collapse = "|")
+    # It's probably simplest if the sequences are in a folder called sequences
+    sequencefiles <- list.files("sequences", pattern = fileexp, ignore.case = TRUE,
+                                full.names = TRUE)
+    sequences <- character(length=length(sequencefiles))
+    names(sequences) <- basename(sequencefiles)
+    for (sequencefile in sequencefiles){
+      sequences[sequencefile] <- paste0(readLines(sequencefile), collapse = "")
+    }
+    # Assume reference sequence is in FASTA format, so the first line is skipped.
+    referenceseq <- paste0(readlines(referencefile)[-1], collapse="")
+    Biostrings::pairwiseAlignment(pattern=sequences, subject=referenceseq)
+  }
+}
+```
+
+(text:alignment) Your caption describing the alignments should go here.
+
+As always, don't forget to cite your sources as appropriate.
+
+```{r references, include=FALSE}
+knitr::write_bib(c("base", "Biostrings"), "knitr.bib")
+```
+
+## References
