@@ -263,7 +263,7 @@ Of course, you will also need a caption for the inhibition plot.
 Of course, you also should have some references in this lab report.
 
 ```{r bibliography, include=FALSE}
-knitr::write_bib(c("base","SSenzymekinetics"), "knitr.bib")
+knitr::write_bib(c("base","units","SSenzymekinetics"), "knitr.bib")
 ```
 
 ## References
