@@ -181,7 +181,7 @@ PartsAB chunk above.
 As in Week One, we'll divide up the analysis of data into calculations and
 plot. This week will also be helped by the use of some functions written
 by Dr. Malmberg to analyze enzyme kinetics in the presence of an inhibitor.
-These functions are found in a package that may be installed from [http://github.com/nmalmberg/SSenzymekinetics](GitHub), or from a package file
+These functions are found in a package that may be installed from [GitHub](http://github.com/nmalmberg/SSenzymekinetics), or from a package file
 downloaded from Canvas. The latter option can be done from the Tools menu of
 RStudio.
 
