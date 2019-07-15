@@ -87,13 +87,13 @@ should make it easier once you know what you're looking for.
 
 ```{r alignment, fig.cap="(text:alignment)"}
 # Select PCR tubes that were sent to OMRF
-omrf <- subset(pcrdata, !is.NA(OMRF))
+omrf <- subset(pcrdata, !is.na(OMRF))
 # Remove primers, etc. that weren't sent to OMRF
 droplevels(omrf) -> omrf
 # Go through each primer, and read in files corresponding to the
 # reference sequence and to the files returned from OMRF
 for (primer in levels(omrf$Primer)){
-  referencefile <- paste(primer, ".fasta")
+  referencefile <- paste0("sequences/", primer, ".fasta")
   if (file.exists(referencefile)){
     # Select all filenames corresponding to samples sent to OMRF
     # corresponding to this primer.
@@ -104,11 +104,13 @@ for (primer in levels(omrf$Primer)){
     sequences <- character(length=length(sequencefiles))
     names(sequences) <- basename(sequencefiles)
     for (sequencefile in sequencefiles){
-      sequences[sequencefile] <- paste0(readLines(sequencefile), collapse = "")
+      sequences[basename(sequencefile)] <- paste0(readLines(sequencefile),
+                                                  collapse = "")
     }
     # Assume reference sequence is in FASTA format, so the first line is skipped.
-    referenceseq <- paste0(readlines(referencefile)[-1], collapse="")
-    Biostrings::pairwiseAlignment(pattern=sequences, subject=referenceseq)
+    referenceseq <- paste0(readLines(referencefile)[-1], collapse="")
+    align <- Biostrings::pairwiseAlignment(pattern=sequences, subject=referenceseq)
+    Biostrings::writePairwiseAlignments(align)
   }
 }
 ```
