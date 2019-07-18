@@ -107,8 +107,8 @@ for (primer in levels(omrf$Primer)){
       sequences[basename(sequencefile)] <- paste0(readLines(sequencefile),
                                                   collapse = "")
     }
-    # Assume reference sequence is in FASTA format, so the first line is skipped.
-    referenceseq <- paste0(readLines(referencefile)[-1], collapse="")
+    # Use Biostrings function to read FASTA.
+    referenceseq <- Biostrings::readDNAStringSet(referencefile)
     align <- Biostrings::pairwiseAlignment(pattern=sequences, subject=referenceseq)
     Biostrings::writePairwiseAlignments(align)
   }
