@@ -10,5 +10,6 @@ At present, the project contains files for four labs:
  - Protein Purification
  - Enzyme Kinetics
  - SNP Analysis
+
 There is also a file to demonstrate helpful aspects of RMarkdown, a BibTeX file to use for
 references, and a CSL file for the American Chemical Society referencing format.
