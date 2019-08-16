@@ -1,0 +1,12 @@
+name: biochem
+channels:
+ - conda-forge
+ - bioconda
+dependencies:
+ - rstudio
+ - r-catools
+ - r-bookdown
+ - r-units
+ - git
+ - bioconductor-biostrings
+
