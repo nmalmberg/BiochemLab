@@ -15,7 +15,7 @@ sudo apt install r-recommended r-cran-units r-bioc-biostrings
 sudo apt install emacs elpa-ess pandoc-citeproc
 
 # Download the bookdown package from CRAN
-R CMD install bookdown
+R CMD INSTALL bookdown
 
 # Add the MELPA repository to the Emacs package list
 cat <<'EOF' >> ~/.emacs
