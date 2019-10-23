@@ -71,8 +71,9 @@ predict(mwmodel, newdata=subset(geldata, Lane.ID!="A"),
 ```
 
 The plot below will show how the ladder data fits to the model. This is not necessary for the calculation, but it can be reassuring to see that the data fits.
+Note that the output of the code block below will not be shown in the final document. This can be changed, but only do so if you intend to draw conclusions from the plot, and then make sure to give the plot an appropriate caption.
 
-```{r eval=FALSE, include=FALSE}
+```{r eval=FALSE, echo=FALSE}
 plot(log(MW)~Rf, data=geldata)
 abline(mwmodel)
 ```
