@@ -34,7 +34,7 @@ legend(1,0.2,legend=c("A"),lty=1)
 
 ## Gel Data
 
-To include an image of your gel, use a code block like the one in Figure @ref[fig:gelimage]. Make sure the gel image has been saved in the same folder as your Markdown document.
+To include an image of your gel, use a code block like the one in Figure \@ref(fig:gelimage). Make sure the gel image has been saved in the same folder as your Markdown document.
 
 ```{r gelimage, fig.cap="SDS-PAGE of protein purification steps. From left to right, molecular weight standard, etc."}
 knitr::include_graphics("nameoffile.jpg", dpi=NA)
