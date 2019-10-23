@@ -23,7 +23,9 @@ absorbance <- read.table("absorbance.dat", header=TRUE)
 
 You can then plot the data with the following block, adding lines and adjusting the position of the legend as necessary.
 
-```{r absorbanceplot, fig.cap="Protein content of size exclusion fractions. Absorbance at 280 nm is plotted as a function of fraction number for two Sephadex G-50 columns loaded with milk whey and eluted with 0.02 M Tris buffer, pH 8.0."}
+(ref:absorbance) Provide an appropriate figure caption for your absorbance plot here. Where did this data come from? What do the different axes represent?
+
+```{r absorbanceplot, fig.cap="(ref:absorbance)"}
 plot(Absorbance~Fraction, data=absorbance, type="n",
      xlab="Fraction number",
      ylab = expression(A[280]))
@@ -36,7 +38,9 @@ legend(1,0.2,legend=c("A"),lty=1)
 
 To include an image of your gel, use a code block like the one in Figure \@ref(fig:gelimage). Make sure the gel image has been saved in the same folder as your Markdown document.
 
-```{r gelimage, fig.cap="SDS-PAGE of protein purification steps. From left to right, molecular weight standard, etc."}
+(ref:gel) Describe your gel in this figure legend. What is in each lane of the gel? What kind of gel is it?
+
+```{r gelimage, fig.cap="(ref:gel)"}
 knitr::include_graphics("nameoffile.jpg", dpi=NA)
 ```
 
