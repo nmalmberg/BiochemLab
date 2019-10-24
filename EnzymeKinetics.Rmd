@@ -127,29 +127,43 @@ Substrates$Rate <- Substrates$Slope #Incomplete
 ### Fit the Rate and Concentration to the Michaelis-Menton equation using
 ### nonlinear least-squares curve fitting, once for each substrate. Save the fits
 ### in objects that can be used for extracting parameters or plotting curves.
-Ldopafit <- nls(Rate ~ SSmicmen(Concentration,Vmax,Km), data=drop_units(Substrates),
-                subset=Substrate=="L-Dopa")
-Ddopafit <- nls(Rate ~ SSmicmen(Concentration,Vmax,Km), data=drop_units(Substrates),
-                subset=Substrate=="D-Dopa")
-### View the parameters to compare Vmax and Km.
-summary(Ldopafit)
-summary(Ddopafit)
+kinetics <- data.frame(row.names = levels(Substrates$Substrate),
+                       fits=NA, Vmax=numeric(), Km=numeric())
+for (substrate in row.names(kinetics)){
+  kinetics[substrate, "fits"] <- nls(Rate ~ SSmicmen(Concentration,Vmax,Km),
+                                    data=drop_units(Substrates),
+                                    subset=Substrate==substrate)
+  ### Store the parameters from the fits for further calculation.
+  kinetics[substrate,"Vmax"] <- coef(kinetics[substrate,"fits"])[["Vmax"]]
+  kinetics[substrate,"Km"] <- coef(kinetics[substrate,"fits"])[["Km"]]
+  ### View the parameters to compare Vmax and Km.
+  summary(kinetics[substrate, "fit"])
+}
+
+units(kinetics$Vmax) <- deparse_unit(Substrates$Rate)
+units(kinetics$Km) <- deparse_unit(Substrates$Concentration)
 ### We can calculate turnover number for each curve, since we know the enzyme
 ### concentration, as well.
-LdopaVmax <- coef(Ldopafit)[["Vmax"]]
-units(LdopaVmax) <- deparse_unit(Substrates$Rate)
-DdopaVmax <- coef(Ddopafit)[["Vmax"]]
-units(DdopaVmax) <- deparse_unit(Substrates$Rate)
-Ldopakcat <- ;
-Ddopakcat <- ;
+kinetics$kcat <- ;
 ### And since we have Km as well, we can calculate the specificity constant.
-LdopaKm <- coef(Ldopafit)[["Km"]]
-units(LdopaKm) <- deparse_unit(Substrates$Concentration)
-DdopaKm <- coef(Ddopafit)[["Km"]]
-units(DdopaKm) <- deparse_unit(Substrates$Concentration)
-LdopaSC <- ;
-DdopaSC <- ;
+kinetics$SC <- ;
 ```
+
+It's probably easiest to put these kinetic parameters in a table to discuss.
+
+```{r kineticstable}
+### Make a header for the kinetics parameters table that includes the
+### units.
+columns <- c("kcat", "Km", "SC")
+tableunits <- character(3)
+names(tableunits) <- columns
+for (column in columns) tableunits[column] <- deparse_unit(kinetics[column])
+headers <- paste0(c("k~cat~ (","K~M~ (", "k~cat~/K~M~ ("), tableunits, ")")
+knitr::kable(drop_units(kinetics[columns]), col.names = headers,
+             caption = "(ref:kinetics")
+```
+
+(ref:kinetics) Write your caption for the table of kinetics parameters here.
 
 It will make the most sense to plot both curves on one plot, to make comparison
 easier. This plot will require a detailed caption, which can be written below.
