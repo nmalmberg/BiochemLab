@@ -18,10 +18,8 @@ your sequencing data (at least to make it easier to read and represent). The
 following code block only needs to be run once.
 
 ```{r installation, eval=FALSE, include=FALSE}
-if (!requireNamespace("BiocManager", quietly = TRUE))
-  install.packages("BiocManager")
-
-BiocManager::install("Biostrings")
+if (!requireNamespace("Biostrings", quietly = TRUE))
+  BiocManager::install("Biostrings")
 ```
 
 This lab report will require an introduction that has at least two citations
