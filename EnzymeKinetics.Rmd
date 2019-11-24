@@ -137,7 +137,7 @@ for (substrate in row.names(kinetics)){
   kinetics[substrate,"Vmax"] <- coef(kinetics[substrate,"fits"])[["Vmax"]]
   kinetics[substrate,"Km"] <- coef(kinetics[substrate,"fits"])[["Km"]]
   ### View the parameters to compare Vmax and Km.
-  summary(kinetics[substrate, "fit"])
+  summary(kinetics[substrate, "fits"])
 }
 
 units(kinetics$Vmax) <- deparse_unit(Substrates$Rate)
@@ -160,7 +160,7 @@ names(tableunits) <- columns
 for (column in columns) tableunits[column] <- deparse_unit(kinetics[column])
 headers <- paste0(c("k~cat~ (","K~M~ (", "k~cat~/K~M~ ("), tableunits, ")")
 knitr::kable(drop_units(kinetics[columns]), col.names = headers,
-             caption = "(ref:kinetics")
+             caption = "(ref:kinetics)")
 ```
 
 (ref:kinetics) Write your caption for the table of kinetics parameters here.
@@ -214,35 +214,64 @@ inhibitordata$SubCon <- inhibitordata$Substrate # Incomplete
 inhibitordata$InhCon <- inhibitordata$Inhibitor # Incomplete
 ### Calculate the reaction rate based on the slopes of the lines.
 inhibitordata$Rate <- inhibitordata$Slope # Incomplete
+
+### Create a set of models that fit the inhibition data to the different
+### equations for reversible inhibition.
+inhibitionmodels <- list()
 ### Model the reaction as though there were no effect by the inhibitor.
-noinhibitnls <- nls(Rate~SSmicmen(SubCon, Vmax, Km),
-                    data=drop_units(inhibitordata))
+inhibitionmodels["None"] <- nls(Rate~SSmicmen(SubCon, Vmax, Km),
+                                data=drop_units(inhibitordata))
 ### Fit the data to competitive, uncompetitive and mixed inhibition models.
-compnls <- nls(Rate~SScompinh(SubCon, InhCon, Vmax, Km, Kc),
-               data=drop_units(inhibitordata))
-unnls <- nls(Rate~SSuncompinh(SubCon, InhCon, Vmax, Km, Ku),
-             data=drop_units(inhibitordata))
-mixednls <- nls(Rate~SSmixedinh(SubCon, InhCon, Vmax, Km, Kc, Ku),
-                data=drop_units(inhibitordata))
-### Compare the residuals from the competitive and uncompetitive inhibition.
-### The fit with smaller residuals is the better fit.
-summary(compnls)
-summary(unnls)
-### Perform an analysis of variance to see whether the model is significantly
-### improved by including inhibition at all, or by including both types of
-### inhibition. Replace compnls with unnls if uncompetitive was a better fit.
-inhanalysis <- anova(noinhibitnls, compnls, mixednls)
-inhanalysis
+### If a particular model doesn't run, comment out the lines that create the
+### model.
+inhibitionmodels["Competitive"] <- nls(Rate~SScompinh(SubCon, InhCon, Vmax, Km, Kc),
+                                       data=drop_units(inhibitordata))
+inhibitionmodels["Uncompetitve"] <- nls(Rate~SSuncompinh(SubCon, InhCon, Vmax, Km, 
+                                                         Ku),
+                                        data=drop_units(inhibitordata))
+inhibitionmodels["Mixed"] <- nls(Rate~SSmixedinh(SubCon, InhCon, Vmax, Km, Kc, Ku),
+                                 data=drop_units(inhibitordata))
 ```
 
 It might be helpful to include a table with the results of the analysis of
 variance, for the purposes of discussing your results.
 
-```{r}
-knitr::kable(inhanalysis, caption = "(ref:analysis)")
+```{r inhibitiontable}
+### Construct a table of parameters for the different inhibition
+### models. Include standard errors with the parameters, and add
+### AIC and BIC calculations to the table.
+inhibitorstart <- data.frame(row.names = c("Vmax", "Km", "Kc", "Ku"))
+for (model in names(inhibitionmodels)) {
+  tempcoef <- summary(inhibitionmodels[model])$coefficients
+  inhibitorstart[[model]] <- paste(signif(tempcoef[rownames(inhibitorstart),1], 3),
+                                   "&pm;",
+                                   signif(tempcoef[rownames(inhibitorstart),2], 1))
+  ### Set parameters that weren't in the model to NA.
+  inhibitorstart[[model]][is.na(coef(inhibitionmodels[model])[rownames(inhibitorstart)])] <- NA
+}
+inhibitortable <- data.frame(t(inhibitorstart))
+### Add AIC and BIC data to table. Remove models from the functions if
+### they were commented out earlier.
+inhibitortable$AIC <- AIC(inhibitionmodels["None"],
+                          inhibitionmodels["Competitive"],
+                          inhibitionmodels["Uncompetitive"],
+                          inhibitionmodels["Mixed"])
+inhibitortable$BIC <- BIC(inhibitionmodels["None"],
+                          inhibitionmodels["Competitive"],
+                          inhibitionmodels["Uncompetitive"],
+                          inhibitionmodels["Mixed"])
+### Construct a table header that includes units for the kinetic parameters.
+tableheader <- character()
+tableheader["Vmax"] <- paste0("V~max~ (", deparse_unit(inhibitordata$Rate), ")")
+tableheader["Km"] <- paste0("K~M~ (", deparse_unit(inhibitordata$SubCon), ")")
+tableheader["Kc"] <- paste0("K~I~ (", deparse_unit(inhibitordata$InhCon), ")")
+tableheader["Ku"] <- paste0("K'~I~ (", deparse_unit(inhibitordata$InhCon), ")")
+tableheader["AIC"] <- "AIC"
+tableheader["BIC"] <- "BIC"
+knitr::kable(inhibitortable, caption = "(ref:analysis)", col.names = tableheader)
 ```
 
-(ref:analysis) Include your descriptive table caption for the anova here.
+(ref:analysis) Include your descriptive table caption for the inhibition table here.
 
 ```{r inhibitorplot, fig.cap="(ref:inhibitor)",fig.asp=0.7}
 plot(Rate ~ SubCon, data=inhibitordata, type="n",
@@ -254,20 +283,19 @@ points(Rate ~ SubCon, data=inhibitordata, pch=1,
 points(Rate ~ SubCon, data=inhibitordata, pch=2,
        subset=(Inhibitor==set_units(1,mL)))
 ### Draw curves for the different models you've fit, both for the points
-### without inhibitor and with inhibitor. Change compnls to unnls if you
-### decided that fit better.
-curve(predict(noinhibitnls, newdata=list(SubCon=x)), lty=1, add=TRUE)
-curve(predict(compnls, newdata=list(SubCon=x, InhCon=0)), lty=2, add=TRUE)
-curve(predict(compnls, newdata=list(SubCon=x,
-                                    InhCon=max(drop_units(inhibitordata$InhCon)))),
-      lty=2, add=TRUE)
-curve(predict(mixednls, newdata=list(SubCon=x, InhCon=0)), lty=3, add=TRUE)
-curve(predict(mixednls, newdata=list(SubCon=x,
-                                     InhCon=max(drop_units(inhibitordata$InhCon)))),
-      lty=3, add=TRUE)
-### You'll need to adjust the x and y values for the legend, so it's visible.
-legend(x="topleft",legend=c("-Phe","+Phe","None", "Competitive", "Mixed"),
-       pch=c(1:2,NA,NA,NA),lty=c(0,0,1:3))
+### without inhibitor and with inhibitor. 
+for (model in 1:length(inhibitionmodels)) {
+  curve(predict(inhibitionmodels[model], newdata=list(SubCon=x, InhCon=0)),
+        lty=model, add=TRUE)
+  curve(predict(inhibitionmodels[model],
+                newdata=list(SubCon=x,
+                             InhCon=max(drop_units(inhibitordata$InhCon)))),
+        lty=model, add=TRUE)
+}
+### You'll need to adjust the abbreviation for the inhibitor.
+legend(x="topleft",legend=c("-Phe","+Phe", names(inhibitionmodels)),
+       pch=c(1:2,rep(NA, times=length(inhibitionmodels))),
+       lty=c(0,0,1:length(inhibitionmodels)))
 ```
 
 Of course, you will also need a caption for the inhibition plot.
