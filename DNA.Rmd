@@ -116,6 +116,10 @@ for (primer in levels(omrf$Primer)){
 (text:alignment) Your caption describing the alignments should go here.
 
 As always, don't forget to cite your sources as appropriate.
+Almost certainly your sources should include articles that discuss the
+genome-wide association studies that have identified these SNPs as significant
+for caffeine/coffee consumption. You can look up the studies by SNP at the
+[Genome-wide Association Studies Catalog](https://www.ebi.ac.uk/gwas/)
 
 ```{r references, include=FALSE}
 knitr::write_bib(c("base", "Biostrings"), "knitr.bib")
