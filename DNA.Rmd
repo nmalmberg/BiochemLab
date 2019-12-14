@@ -72,18 +72,18 @@ You can use the code block below to include an image of a gel, if it would
 be helpful. If you use more than one gel picture, you'll need to change the
 filename into a vector of filenames.
 
-```{r gelimage, fig.cap='(text:gelimage)', out.width="100%"}
+```{r gelimage, fig.cap='(ref:gelimage)', out.width="100%"}
 knitr::include_graphics("GelImage.JPG",dpi=NA)
 ```
 
-(text:gelimage) Make sure you describe the contents of each lane in this figure caption, assuming you are planning to include the figure.
+(ref:gelimage) Make sure you describe the contents of each lane in this figure caption, assuming you are planning to include the figure.
 
 The code block below should generate a figure with the sequences returned from OMRF
 aligned to the sequences we should have got from amplification with those primers.
 You'll probably still have to work to figure out which base is the SNP, but this
 should make it easier once you know what you're looking for.
 
-```{r alignment, fig.cap="(text:alignment)"}
+```{r alignment, fig.cap="(ref:alignment)"}
 # Select PCR tubes that were sent to OMRF
 omrf <- subset(pcrdata, !is.na(OMRF))
 # Remove primers, etc. that weren't sent to OMRF
@@ -113,7 +113,7 @@ for (primer in levels(omrf$Primer)){
 }
 ```
 
-(text:alignment) Your caption describing the alignments should go here.
+(ref:alignment) Your caption describing the alignments should go here.
 
 As always, don't forget to cite your sources as appropriate.
 Almost certainly your sources should include articles that discuss the
