@@ -1,5 +1,5 @@
 ---
-title: "Bookdown Requirements"
+title: "Lab Reports in RMarkdown"
 author: "Nathan Malmberg"
 date: "5/31/2018"
 output: 
@@ -7,7 +7,10 @@ output:
     number_sections: FALSE
 bibliography: [knitr.bib, references.bib]
 csl: american-chemical-society.csl
+abstract: (ref:abstract)
 ---
+
+(ref:abstract) Lab reports typically require a significant amount of data analysis that must be presented in a highly structured form. RMarkdown allows the combining of data analysis and writeup into a single document. The present work outlines the process of creating a lab report using RMarkdown. Formatting considerations and data analysis are considered.
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
