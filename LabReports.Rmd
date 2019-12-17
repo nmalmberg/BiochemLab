@@ -67,8 +67,49 @@ If the equation is appropriately labeled, the equation will be numbered. Referen
 
 ## References
 
+Lab reports must contain an appropriate list of references. These are typically
+the sources that have been cited during the course of writing the report,
+including articles that contribute to the significance of the work, sources
+like your lab book [@boyer_modern_2000] for the methods, and any software you
+used in the data analysis [@R-base]. To incorporate these references in an
+RMarkdown document, these references should be listed in a BibTeX file in the
+same folder as your document.
+
+This document contains utilizes two BibTeX files, listed in the header at the top
+of the file. One is a file that already exists in this project, called
+references.bib, that contains several sources to cite, most of which you will
+*not* cite in the experiments outlined in this project, but can help you to see
+how BibTeX sources are listed in the file, if you need to create more entries
+by hand. Most of the entries in this file were created with [Zotero](http://zotero.org), which can also be used to create additional entries
+for inclusion in this file. [Google Scholar](http://scholar.google.com) can also
+be used to create entries for inclusion in this file.
+
+The other file listed in the header is created at the time of knitting the file.
+This file is created by the code block below, and contains entries for all the
+R packages listed in the first part of the function. The code block extracts the
+citation information from the packages that are installed in the current
+environment.
+
 ```{r}
 knitr::write_bib(c("base", "knitr"), "knitr.bib")
 ```
 
+To cite the sources that are listed in these files, use square brackets containing
+an at sign followed by the key for the entry to be cited [@lasker_protein_1999].
+In the references.bib file, this is the first set of characters following the
+curly brackets at the beginning of the entry. The entries in the knitr.bib file
+will have keys that start with "R-" and end with the name of the package [@R-knitr].
+
+When the file is knit, the reference information will be extracted from the
+BibTeX files, and both citations and references will be formatted according to
+the Citation Style Language (CSL) file listed in the header. The code block
+below will make sure that this file can be found in your current folder,
+downloading the file from Zotero's website if necessary. The references will
+be placed at the end of the document.
+
+```{bash}
+if [! -s american-chemical-society.csl]; then
+  curl http://zotero.org/styles/american-chemical-society.csl;
+fi
+```
 
