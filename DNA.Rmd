@@ -7,11 +7,14 @@ output:
     number_sections: FALSE
 bibliography: [knitr.bib, references.bib]
 csl: american-chemical-society.csl
+abstract: (ref:abstract)
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
+(ref:abstract) Replace this sentence with your abstract.
 
 You will need to install one (or two) additional package(s) in order to analyze
 your sequencing data (at least to make it easier to read and represent). The
