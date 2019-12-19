@@ -18,41 +18,102 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## R Markdown
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>. This document will contain a few of the salient features for using R Markdown for producing lab reports.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like that shown in Table\ \@ref(tab:cars). The table also shows the functionality of one of the helper functions of knitr [@R-knitr].
+One of the advantages of using R Markdown for writing lab reports is that the
+data analysis for the lab can be included in the document. These will almost
+always be located in *code chunks* located in the document. These chunks, which
+are marked by triple backticks at the beginning of a line, can be used to
+perform calculations or to output content in the lab report. Most of these
+code chunks will be written for you, although there may be times when you have
+to make modifications to these chunks. Where these modifications need to be
+made should be fairly clear, but if you have questions, *ask*.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. The code that created the output will be shown in a gray box above the output, like the chunk that creates Table\ \@ref(tab:cars). This information is important to your instructor for the purposes of confirming that you have performed the analysis correctly. However, because this level of analysis is not normally incorporated into a scientific paper, you should write your report *as if the code wasn't there*.
 
 ```{r cars}
 knitr::kable(summary(cars), caption="Statistical summary of the data in the built-in data frame cars.")
 ```
 
+It is also possible to include R code within a paragraph of text. This is
+accomplished by surrounding a single line of code with single backticks. This
+could be useful to report that the average of the speed values in the cars
+data frame is `r mean(cars$speed)`.
+
+### YAML Header
+
+The lines at the top of the document specify the title of the document, the author,
+and other information that is necessary to produce the final document. For your lab
+reports, you should always change the title, author and date of the paper. You can
+also specify an abstract in the YAML block (as with this paper), but if you use a
+text reference (like this document does), you wouldn't need to change the YAML
+itself.
+
+### Headers
+
+A title of a section should go on a line by itself, preceded by one or more
+pound signs (#) and a space. The more signs in front of the title, the smaller
+the title, which is appropriate for subsections.
+
+### Font Modifications
+
 Sometimes you may need to include some modified fonts, to discuss topics like the &pi;-electrons of C~6~H~6~.
 
-## Including Plots
+### Specifying Data
 
-You can also embed plots, for example:
+Data will generally be specified in R code chunks, and will be assigned to a
+*variable* name. This may include single numbers or *vectors*, which are
+collections of values of the same type. This will often be convenient for
+calculations, as we can perform the same calculation on all numbers of a vector
+at once. We will also make use of *data frames*, which are collections of vectors
+of the same length, with names assigned to the different vectors. There are
+code chunks in some of these files for creating data frames, but occasionally
+we will take advantage of the output of different instruments, which will
+usually create data in the appropriate shape for making these 2-d data
+arrangements.
+
+## Figures and Tables
+
+Plots of data will typically be generated with R code chunks, as seen in
+Figure\ \@ref(fig:pressure). Remember that a figure needs to be able to stand
+largely on its own, and thus must have an *informative* caption that specifies
+what is plotted on the graph with regard to both symbols and lines, to indicate
+the source both of the data and any analysis that is present in the plot [@R-base].
 
 (ref:pressure) Plot of vapor pressure (open circles) as a function of temperature for mercury. 
 
-```{r pressure, echo=FALSE, fig.cap='(ref:pressure)'}
+```{r pressure, fig.cap='(ref:pressure)'}
 plot(pressure, xlab=expression(paste("Temperature (",degree*C,
                                      ")")),
      ylab="Pressure (mm Hg)")
 ```
 
-Note that the `echo = FALSE` parameter [@gagnon_fluorine-tagged_2010] was added to the code chunk producing Figure \@ref(fig:pressure) to prevent printing of the R code that generated the plot [@R-base].
-
-If you have an image to include, rather than a plot to create from data, there are Markdown commands to include images.
-
-![(ref:acids)](adnly.png)
+For those figures that derive from images created with an external program,
+it's probably best to include these images with the *include_graphics* function
+of the *knitr* package [@R-knitr], as shown in Figure\ \@ref(fig:acids).
+Remember that these images also need an informative caption to allow the figure
+to stand on its own. Often, these images would also benefit from additional
+annotation, to make clear what is present in each part of the image.
 
 (ref:acids) Five amino acids with very different solubilities in water. From left, alanine, aspartate, asparagine, leucine, tyrosine.
 
-It might take advantage of more of the features of knitr, though, to use another of the knitr helper functions in an R code block.
 ```{r acids, fig.cap='(ref:acids)'}
 knitr::include_graphics('adnly.png', dpi=NA)
 ```
 
+Tables, like that shown in Table\ \@ref(tab:cars), are most easily created
+using the *kable* function of *knitr* [@R-knitr]. This will work well mainly
+if the data to be shown in the table is arranged in a data frame. Markdown
+has other techniques for creating tables if desired.
+
+### Bookdown
+
+We will be using a package called *bookdown* [@R-bookdown] to create the final
+versions of the lab reports we create. One of the advantages of using bookdown
+is that code blocks that have captions will automatically be labeled with
+"Figure" or "Table" and the number of the float prepended to the caption.
+Bookdown also allows references to these figures and tables that are based
+on the labels of the code chunks that create them.
 
 ## Equations
 
@@ -63,7 +124,8 @@ RMarkdown can also include equations. These are entered using LaTeX format.
   (\#eq:hill)
 \end{equation}
 
-If the equation is appropriately labeled, the equation will be numbered. References to the equations, like to Equation \@ref(eq:hill), should also work.
+If the equation is appropriately labeled, bookdown will number the equation
+as appropriate to a scientific work. References to the equations, like to Equation \@ref(eq:hill), should also work.
 
 ## References
 
