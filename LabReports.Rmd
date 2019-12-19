@@ -113,7 +113,13 @@ versions of the lab reports we create. One of the advantages of using bookdown
 is that code blocks that have captions will automatically be labeled with
 "Figure" or "Table" and the number of the float prepended to the caption.
 Bookdown also allows references to these figures and tables that are based
-on the labels of the code chunks that create them.
+on the labels of the code chunks that create them. Bookdown also extends Markdown
+with *text references*, which can be used to substitute a placeholder with a
+longer portion of text anywhere text is appropriate. The placeholder takes the
+form (ref:label), where *label* can be substituted with any word. The reference
+itself is placed in a paragraph by itself, with the placeholder followed by a
+single line of text. This text can contain any font modifications or
+cross-references available in R Markdown.
 
 ## Equations
 
@@ -125,7 +131,7 @@ RMarkdown can also include equations. These are entered using LaTeX format.
 \end{equation}
 
 If the equation is appropriately labeled, bookdown will number the equation
-as appropriate to a scientific work. References to the equations, like to Equation \@ref(eq:hill), should also work.
+as appropriate to a scientific work. References to the equations, like to Equation\ \@ref(eq:hill), should also work.
 
 ## References
 
@@ -153,7 +159,7 @@ citation information from the packages that are installed in the current
 environment.
 
 ```{r}
-knitr::write_bib(c("base", "knitr"), "knitr.bib")
+knitr::write_bib(c("base", "knitr", "bookdown"), "knitr.bib")
 ```
 
 To cite the sources that are listed in these files, use square brackets containing
