@@ -133,6 +133,67 @@ RMarkdown can also include equations. These are entered using LaTeX format.
 If the equation is appropriately labeled, bookdown will number the equation
 as appropriate to a scientific work. References to the equations, like to Equation\ \@ref(eq:hill), should also work.
 
+## Results and Discussion
+
+Your results and discussion section should describe the results obtained
+*throughout* the experiment, not just the results at the end of the experiment.
+This should include qualitative observations as well as any numerical results.
+Numerical results should be compared to relevant values (not necessarily
+"literature" values), and when uncertainty is available for numerical results,
+that uncertainty should be factored into the comparison. Remember to describe
+not only what the results are, but what they *mean*. This significance should
+not reflect primarily "the experiment was done correctly", as the focus of the
+results is not the experimenter, but the biochemical system of interest.
+
+When you include figures and tables in your results, be sure to discuss them
+by name in your results (i.e. Figure\ \@ref(fig:cars)). Make sure that any
+figures or tables included are used for a specific purpose in your discussion.
+Keep in mind that your results section is arguing for a specific interpretation
+of your data, and that your figures and tables are evidence provided for that
+interpretation. As a general rule, if you find that you are talking about more
+than one figure or table at a time, you're probably not using them for a
+specific argument, and you might be including more figures than your paper
+requires.
+
+Results in a Results section are usually prefaced with a very brief description
+of how the results were obtained. For those experiments where you don't write
+a Methods section, this will likely be where you cite the sources that were used
+for conducting the experiment.
+
+## Methods
+
+Your Methods section should be a concise description of the materials and
+techniques *required* to perform the experiment. Generally, this should be
+written at the level that a student who has *successfully completed* an
+undergraduate biochemistry course should be able to replicate the findings.
+This does not mean that the student would perform the experiment in an identical
+manner to you, but that if the student adheres to the specifications outlined
+in your Methods, they should come to the same conclusions. For example, it
+should not be necessary to describe how to make a buffer, but it will be
+important to use a buffer of the same concentration and pH.
+
+Methods sections should include not only a description of how data was collected,
+but also a description of how data was analyzed. The section should cite both
+sources for methods and software for analysis. One of the advantages of using
+R Markdown is that the software used for analysis has built-in citation
+information (see the References section).
+
+## Introduction
+
+Your introduction should tell your audience why the system explored during the
+lab is of particular interest biochemically, as well as how the biochemical
+techniques can help us explore that system. To demonstrate that others consider
+the system or technique is of interest, you should include at least two citations
+of the primary literature (journal articles).
+
+## Abstract
+
+The abstract is a summary of the entire paper, intended to be published
+separately from the rest of the paper. Consequently, it should include
+information from each section of the paper. It should include specific results
+from the experiment. Not surprisingly, this should be written *after* the
+rest of the paper is written, even though it goes at the beginning of the report.
+
 ## References
 
 Lab reports must contain an appropriate list of references. These are typically
