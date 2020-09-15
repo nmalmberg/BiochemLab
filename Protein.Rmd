@@ -29,7 +29,7 @@ save the FC folder in your project folder.
 
 ```{r bradford}
 absorbance <- data.frame()
-# replate <- list()
+replate <- list()
 for (filename in list.files("FC", full.names = TRUE)){
   plate <- read.table(filename, skip=7)
   replate <- reshape(plate, direction="long", varying = 1:12,
