@@ -217,20 +217,29 @@ inhibitordata$Rate <- inhibitordata$Slope # Incomplete
 
 ### Create a set of models that fit the inhibition data to the different
 ### equations for reversible inhibition.
-inhibitionmodels <- list()
-### Model the reaction as though there were no effect by the inhibitor.
-inhibitionmodels["None"] <- nls(Rate~SSmicmen(SubCon, Vmax, Km),
-                                data=drop_units(inhibitordata))
-### Fit the data to competitive, uncompetitive and mixed inhibition models.
-### If a particular model doesn't run, comment out the lines that create the
-### model.
-inhibitionmodels["Competitive"] <- nls(Rate~SScompinh(SubCon, InhCon, Vmax, Km, Kc),
-                                       data=drop_units(inhibitordata))
-inhibitionmodels["Uncompetitve"] <- nls(Rate~SSuncompinh(SubCon, InhCon, Vmax, Km, 
-                                                         Ku),
-                                        data=drop_units(inhibitordata))
-inhibitionmodels["Mixed"] <- nls(Rate~SSmixedinh(SubCon, InhCon, Vmax, Km, Kc, Ku),
-                                 data=drop_units(inhibitordata))
+inhibitionmodels <-
+  list(
+  ### Model the reaction as though there were no effect by the inhibitor.
+  None = nls(Rate ~ SSmicmen(SubCon, Vmax, Km),
+  data = drop_units(inhibitordata)),
+  ### Fit the data to competitive, uncompetitive and mixed inhibition models.
+  ### If a particular model doesn't run, comment out the lines that create the
+  ### model.
+  Competitive = nls(
+  Rate ~ SScompinh(SubCon, InhCon, Vmax, Km, Kc),
+  data = drop_units(inhibitordata)
+  ),
+  Uncompetitve = nls(
+  Rate ~ SSuncompinh(SubCon, InhCon, Vmax, Km,
+  Ku),
+  data = drop_units(inhibitordata)
+  ),
+  Mixed = nls(
+  Rate ~ SSmixedinh(SubCon, InhCon, Vmax, Km, Kc, Ku),
+  data = drop_units(inhibitordata)
+  )
+  )
+
 ```
 
 It might be helpful to include a table with the results of the analysis of
@@ -241,13 +250,19 @@ variance, for the purposes of discussing your results.
 ### models. Include standard errors with the parameters, and add
 ### AIC and BIC calculations to the table.
 inhibitorstart <- data.frame(row.names = c("Vmax", "Km", "Kc", "Ku"))
+### Each of the models will have its own set of parameters to add to the table
+inhibitorparams <- list(None=c("Vmax","Km"), Competitive=c("Vmax", "Km", "Kc"),
+                        Uncompetitive=c("Vmax","Km","Ku"),
+                        Mixed=c("Vmax","Km","Kc","Ku"))
 for (model in names(inhibitionmodels)) {
+  # Get a data frame of the coefficients from the model.
   tempcoef <- summary(inhibitionmodels[model])$coefficients
-  inhibitorstart[[model]] <- paste(signif(tempcoef[rownames(inhibitorstart),1], 3),
+  params <- inhibitorparams[model]
+  # Assign the coefficients with standard errors to their corresponding
+  # location in the inhibitorstart table.
+  inhibitorstart[params, model] <- paste(signif(tempcoef[params,1], 3),
                                    "&pm;",
-                                   signif(tempcoef[rownames(inhibitorstart),2], 1))
-  ### Set parameters that weren't in the model to NA.
-  inhibitorstart[[model]][is.na(coef(inhibitionmodels[model])[rownames(inhibitorstart)])] <- NA
+                                   signif(tempcoef[params,2], 1))
 }
 inhibitortable <- data.frame(t(inhibitorstart))
 ### Add AIC and BIC data to table. Remove models from the functions if
@@ -255,11 +270,11 @@ inhibitortable <- data.frame(t(inhibitorstart))
 inhibitortable$AIC <- AIC(inhibitionmodels["None"],
                           inhibitionmodels["Competitive"],
                           inhibitionmodels["Uncompetitive"],
-                          inhibitionmodels["Mixed"])
+                          inhibitionmodels["Mixed"])$AIC
 inhibitortable$BIC <- BIC(inhibitionmodels["None"],
                           inhibitionmodels["Competitive"],
                           inhibitionmodels["Uncompetitive"],
-                          inhibitionmodels["Mixed"])
+                          inhibitionmodels["Mixed"])$AIC
 ### Construct a table header that includes units for the kinetic parameters.
 tableheader <- character()
 tableheader["Vmax"] <- paste0("V~max~ (", deparse_unit(inhibitordata$Rate), ")")
