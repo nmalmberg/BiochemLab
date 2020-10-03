@@ -127,18 +127,26 @@ Substrates$Rate <- Substrates$Slope #Incomplete
 ### Fit the Rate and Concentration to the Michaelis-Menton equation using
 ### nonlinear least-squares curve fitting, once for each substrate. Save the fits
 ### in objects that can be used for extracting parameters or plotting curves.
-kinetics <- data.frame(row.names = levels(Substrates$Substrate),
-                       fits=NA, Vmax=numeric(), Km=numeric())
+substratelevels <- levels(Substrates$Substrate)
+kinetics <- data.frame(row.names = substratelevels,
+                       Vmax=numeric(length=length(substratelevels)),
+                       Km=numeric(length=length(substratelevels)))
+### Assemble a list of model fits for later parameter extraction and plotting.
+substratemodels <- list()
 for (substrate in row.names(kinetics)){
-  kinetics[substrate, "fits"] <- nls(Rate ~ SSmicmen(Concentration,Vmax,Km),
+  currentmodel <- nls(Rate ~ SSmicmen(Concentration,Vmax,Km),
                                     data=drop_units(Substrates),
                                     subset=Substrate==substrate)
   ### Store the parameters from the fits for further calculation.
-  kinetics[substrate,"Vmax"] <- coef(kinetics[substrate,"fits"])[["Vmax"]]
-  kinetics[substrate,"Km"] <- coef(kinetics[substrate,"fits"])[["Km"]]
+  kinetics[substrate,"Vmax"] <- coef(currentmodel)[["Vmax"]]
+  kinetics[substrate,"Km"] <- coef(currentmodel)[["Km"]]
   ### View the parameters to compare Vmax and Km.
-  summary(kinetics[substrate, "fits"])
+  summary(currentmodel)
+  ### Add the model to the list of models.
+  substratemodels <- c(substratemodels,list(currentmodel))
 }
+### Set names for the model list.
+names(substratemodels) <- substratelevels
 
 units(kinetics$Vmax) <- deparse_unit(Substrates$Rate)
 units(kinetics$Km) <- deparse_unit(Substrates$Concentration)
@@ -157,7 +165,7 @@ It's probably easiest to put these kinetic parameters in a table to discuss.
 columns <- c("kcat", "Km", "SC")
 tableunits <- character(3)
 names(tableunits) <- columns
-for (column in columns) tableunits[column] <- deparse_unit(kinetics[column])
+for (column in columns) tableunits[column] <- deparse_unit(kinetics[[column]])
 headers <- paste0(c("k~cat~ (","K~M~ (", "k~cat~/K~M~ ("), tableunits, ")")
 knitr::kable(drop_units(kinetics[columns]), col.names = headers,
              caption = "(ref:kinetics)")
@@ -178,13 +186,15 @@ easier. This plot will require a detailed caption, which can be written below.
 plot(Rate ~ Concentration, data=Substrates, type="n",
      xlab=make_unit_label("'[Dopa]'",Substrates$Concentration),
      ylab=make_unit_label("V[0]",Substrates$Rate))
-points(Rate ~ Concentration, data=Substrates, pch=1, subset=Substrate=="L-Dopa")
-points(Rate ~ Concentration, data=Substrates, pch=2, subset=Substrate=="D-Dopa")
-### Draw the lines for the curve fit for each substrate.
-curve(predict(Ldopafit, newdata=list(Concentration=x)), lty=1, add=TRUE)
-curve(predict(Ddopafit, newdata=list(Concentration=x)), lty=2, add=TRUE)
+for (substrate in 1:length(substratelevels)) {
+  points(Rate ~ Concentration, data=Substrates, pch=substrate,
+         subset=(Substrate==substratelevels[substrate]))
+  curve(predict(substratemodels[[substratelevels[substrate]]],
+                newdata=list(Concentration=x)), lty=substrate, add=TRUE)
+}
+
 ### You'll need to adjust the x and y values for the legend, so it's visible.
-legend(x="topleft",legend=c("L-Dopa","D-Dopa"),pch=1:2,lty=1:2)
+legend(x="topleft",legend=substratelevels,pch=1:2,lty=1:2)
 ```
 
 ## Week Two
@@ -300,7 +310,7 @@ points(Rate ~ SubCon, data=inhibitordata, pch=2,
 ### Draw curves for the different models you've fit, both for the points
 ### without inhibitor and with inhibitor. 
 for (model in 1:length(inhibitionmodels)) {
-  curve(predict(inhibitionmodels[model], newdata=list(SubCon=x, InhCon=0)),
+  curve(predict(inhibitionmodels[[model]], newdata=list(SubCon=x, InhCon=0)),
         lty=model, add=TRUE)
   curve(predict(inhibitionmodels[model],
                 newdata=list(SubCon=x,
