@@ -239,7 +239,7 @@ inhibitionmodels <-
   Rate ~ SScompinh(SubCon, InhCon, Vmax, Km, Kc),
   data = drop_units(inhibitordata)
   ),
-  Uncompetitve = nls(
+  Uncompetitive = nls(
   Rate ~ SSuncompinh(SubCon, InhCon, Vmax, Km,
   Ku),
   data = drop_units(inhibitordata)
@@ -266,7 +266,7 @@ inhibitorparams <- list(None=c("Vmax","Km"), Competitive=c("Vmax", "Km", "Kc"),
                         Mixed=c("Vmax","Km","Kc","Ku"))
 for (model in names(inhibitionmodels)) {
   # Get a data frame of the coefficients from the model.
-  tempcoef <- summary(inhibitionmodels[model])$coefficients
+  tempcoef <- summary(inhibitionmodels[[model]])$coefficients
   params <- inhibitorparams[model]
   # Assign the coefficients with standard errors to their corresponding
   # location in the inhibitorstart table.
@@ -277,14 +277,14 @@ for (model in names(inhibitionmodels)) {
 inhibitortable <- data.frame(t(inhibitorstart))
 ### Add AIC and BIC data to table. Remove models from the functions if
 ### they were commented out earlier.
-inhibitortable$AIC <- AIC(inhibitionmodels["None"],
-                          inhibitionmodels["Competitive"],
-                          inhibitionmodels["Uncompetitive"],
-                          inhibitionmodels["Mixed"])$AIC
-inhibitortable$BIC <- BIC(inhibitionmodels["None"],
-                          inhibitionmodels["Competitive"],
-                          inhibitionmodels["Uncompetitive"],
-                          inhibitionmodels["Mixed"])$AIC
+inhibitortable$AIC <- AIC(inhibitionmodels[["None"]],
+                          inhibitionmodels[["Competitive"]],
+                          inhibitionmodels[["Uncompetitive"]],
+                          inhibitionmodels[["Mixed"]])$AIC
+inhibitortable$BIC <- BIC(inhibitionmodels[["None"]],
+                          inhibitionmodels[["Competitive"]],
+                          inhibitionmodels[["Uncompetitive"]],
+                          inhibitionmodels[["Mixed"]])$AIC
 ### Construct a table header that includes units for the kinetic parameters.
 tableheader <- character()
 tableheader["Vmax"] <- paste0("V~max~ (", deparse_unit(inhibitordata$Rate), ")")
@@ -293,7 +293,8 @@ tableheader["Kc"] <- paste0("K~I~ (", deparse_unit(inhibitordata$InhCon), ")")
 tableheader["Ku"] <- paste0("K'~I~ (", deparse_unit(inhibitordata$InhCon), ")")
 tableheader["AIC"] <- "AIC"
 tableheader["BIC"] <- "BIC"
-knitr::kable(inhibitortable, caption = "(ref:analysis)", col.names = tableheader)
+knitr::kable(inhibitortable, caption = "(ref:analysis)",
+             col.names = tableheader[names(inhibitortable)])
 ```
 
 (ref:analysis) Include your descriptive table caption for the inhibition table here.
@@ -312,7 +313,7 @@ points(Rate ~ SubCon, data=inhibitordata, pch=2,
 for (model in 1:length(inhibitionmodels)) {
   curve(predict(inhibitionmodels[[model]], newdata=list(SubCon=x, InhCon=0)),
         lty=model, add=TRUE)
-  curve(predict(inhibitionmodels[model],
+  curve(predict(inhibitionmodels[[model]],
                 newdata=list(SubCon=x,
                              InhCon=max(drop_units(inhibitordata$InhCon)))),
         lty=model, add=TRUE)
