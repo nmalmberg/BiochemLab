@@ -79,10 +79,12 @@ conc <- grep("^Concentration:", csvlines, fixed=FALSE,
 geldata <- read.delim(header=TRUE, row.names = 2,
                       text=paste(csvlines[bands:conc],
                                  collapse="\n"))
-# Replace the MW column with NA for most of the bands, and with
-# the appropriate MW for the ladder bands.
-geldata$MW <- NA
-geldata["A3", "MW"] <- 170 # Etc.
+# Create a data frame with the band IDs and MWs.
+# Use data frame to populate computer output with MWs.
+
+ladderdata <- read.table(header = TRUE, text="MW")
+geldata$MW <- ladderdata$MW[geldata$Band.ID]
+
 
 # Fit the data to a straight line, with a logarithmic scaling
 # of the MW data.
