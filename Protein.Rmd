@@ -10,7 +10,7 @@ csl: american-chemical-society.csl
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 ```
 
 ## Absorbance Data
@@ -109,3 +109,11 @@ knitr::write_bib("base", "knitr.bib")
 ```
 
 ## References
+
+<div id="refs"></div>
+
+## Appendix
+
+```{r ref.label=knitr::all_labels(), echo=TRUE, eval=FALSE}
+```
+

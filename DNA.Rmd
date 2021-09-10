@@ -11,7 +11,7 @@ abstract: (ref:abstract)
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 ```
 
 (ref:abstract) Replace this sentence with your abstract.
@@ -39,7 +39,7 @@ refer to the lane by number. The OMRF label should be distinct, and should
 include the string "OBU", but shouldn't include nonalphanumeric characters.
 For the samples you don't send to OMRF, put NA in for the OMRF column.
 
-```{r pcr, include=FALSE}
+```{r pcr}
 pcrdata <- read.table(header = TRUE, text = "
 Tube    Student    Primer    Gel    Lane    OMRF")
 ```
@@ -129,3 +129,11 @@ knitr::write_bib(c("base", "Biostrings"), "knitr.bib")
 ```
 
 ## References
+
+<div id="refs"></div>
+
+## Appendix
+```{r ref.label=knitr::all_labels(), echo=TRUE, eval=FALSE}
+
+```
+
