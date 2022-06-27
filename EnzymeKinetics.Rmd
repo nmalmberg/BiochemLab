@@ -104,7 +104,7 @@ supplied.
 ### will be saved as a CSV file that you can copy into the function below.
 ### If you separate values with spaces rather than commas, change "csv"
 ### to "table".
-Substrates <- read.csv(header=TRUE,text="")
+Substrates <- read.csv(header=TRUE, stringsAsFactors = TRUE , text="")
 ### Assign appropriate units to each of the columns
 units(Substrates$Substrate.Vol) <- "mL"
 units(Substrates$Slope) <- ;

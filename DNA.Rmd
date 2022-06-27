@@ -40,7 +40,7 @@ include the string "OBU", but shouldn't include nonalphanumeric characters.
 For the samples you don't send to OMRF, put NA in for the OMRF column.
 
 ```{r pcr}
-pcrdata <- read.table(header = TRUE, text = "
+pcrdata <- read.table(header = TRUE, stringsAsFactors = TRUE, text = "
 Tube    Student    Primer    Gel    Lane    OMRF")
 ```
 
