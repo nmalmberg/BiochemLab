@@ -43,11 +43,13 @@ ReactionVolume <- set_units(3,mL)
 ### here, so you can calculate the concentrations of the reagents in the
 ### stock solutions. The L-Dopa solution needs to be made both weeks, but
 ### the D-Dopa, cinnamic acid and thiourea solutions should only need to
-### be made once.
-LDopaMass <- set_units(c(,),g)
-LDopaVolume <- set_units(c(,),mL)
-DDopaMass <- set_units(,g)
-DDopaVolume <- set_units(,mL)
+### be made once. All three Dopa solutions can be recorded with a
+### single vector, with appropriate names provided for the different
+### solutions. You can start by recording the quantities for the
+### solutions for the first week, and then adding the quantities for
+### the solution for the second week.
+DopaMass <- set_units(c(,),g)
+DopaVolume <- set_units(c(,),mL)
 cinnamicMass <- ;
 cinnamicVolume <- ;
 thioureaMass <- ;
@@ -56,8 +58,13 @@ thioureaVolume <- ;
 ### mass and molecular weights of the reagents, and the volumes of the
 ### solutions.
 DopaFW <- set_units(,g/mol)
-LDopaStock <- ;
-DDopaStock <- ;
+DopaStock <- ;
+### Provide names for each of the solutions you made. The first two
+### solutions should be named with the same names you use for the
+### substrate when you collect your data, and the third solution
+### (when you make it) should be called "Week2".
+names(DopaStock) <- c("L-Dopa","D-Dopa")
+
 cinnamicFW <- ;
 thioureaFW <- ;
 cinnamicStock <- ;
@@ -86,7 +93,7 @@ EnzymeStock <- ;
 EnzymeVolumes <- set_units(c(,),uL)
 ### Because the concentration of enzyme in the stock solution is not the
 ### same as the concentration of the enzyme in the reaction, you'll need
-### to calculate the concentration of enzyme in the reaction.
+### to calculate the molar concentration of enzyme in the reaction.
 EnzymeReaction <- ;
 ```
 
@@ -109,14 +116,14 @@ Substrates <- read.csv(header=TRUE, stringsAsFactors = TRUE , text="")
 units(Substrates$Substrate.Vol) <- "mL"
 units(Substrates$Slope) <- ;
 ### The substrate concentration in the reaction is based on the concentration
-### of the stock solution as well as the volume of substrate added. Be sure
-### to use the concentration of stock solution from the correct week.
-Substrates$Concentration <- LDopaStock[1] #Incomplete
-### The following line can be used to change the Concentration values for
-### those rows that use D-Dopa as a substrate, if the concentration of the two
-### stock solutions is different.
-Substrates$Concentration[Substrates$Substrate=="D-Dopa"] = DDopaStock *
-    Substrates$Substrate.Vol[Substrates$Substrate=="D-Dopa"] #Incomplete
+### of the stock solution as well as the volume of substrate added.
+### We'll use the names of the substrates as the key for which
+### stock solution concentration to use.
+Substrates$Concentration <- DopaStock[Substrates.Substrate] #Incomplete
+### It would be a good idea to convert the substrate concentration
+### to a manageable unit. This will also confirm that your
+### calculation is sensible.
+units(Substrates$Concentration) <- ;
 ### It will be helpful to specify the absorptivity of the product to aid
 ### your calculations. Be sure to supply appropriate units.
 DopachromeE <- ;
@@ -220,7 +227,8 @@ units(inhibitordata$Slope) <- ;
 
 ### Calculate substrate concentration using Week 2 stock concentration
 ### of L-Dopa and the volume added to the reaction.
-inhibitordata$SubCon <- inhibitordata$Substrate # Incomplete
+inhibitordata$SubCon <- DopaStock["Week2"] *
+  inhibitordata$Substrate # Incomplete
 inhibitordata$InhCon <- inhibitordata$Inhibitor # Incomplete
 ### Calculate the reaction rate based on the slopes of the lines.
 inhibitordata$Rate <- inhibitordata$Slope # Incomplete
