@@ -119,7 +119,7 @@ units(Substrates$Slope) <- ;
 ### of the stock solution as well as the volume of substrate added.
 ### We'll use the names of the substrates as the key for which
 ### stock solution concentration to use.
-Substrates$Concentration <- DopaStock[Substrates.Substrate] #Incomplete
+Substrates$Concentration <- DopaStock[Substrates$Substrate] #Incomplete
 ### It would be a good idea to convert the substrate concentration
 ### to a manageable unit. This will also confirm that your
 ### calculation is sensible.
