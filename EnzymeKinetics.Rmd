@@ -275,7 +275,7 @@ inhibitorparams <- list(None=c("Vmax","Km"), Competitive=c("Vmax", "Km", "Kc"),
 for (model in names(inhibitionmodels)) {
   # Get a data frame of the coefficients from the model.
   tempcoef <- summary(inhibitionmodels[[model]])$coefficients
-  params <- inhibitorparams[model]
+  params <- inhibitorparams[[model]]
   # Assign the coefficients with standard errors to their corresponding
   # location in the inhibitorstart table.
   inhibitorstart[params, model] <- paste(signif(tempcoef[params,1], 3),
