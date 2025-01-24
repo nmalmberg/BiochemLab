@@ -83,7 +83,7 @@ geldata <- read.delim(header=TRUE, row.names = 2,
 # Use data frame to populate computer output with MWs.
 
 ladderdata <- read.table(header = TRUE, text="MW")
-geldata$MW <- ladderdata$MW[geldata$Band.ID]
+geldata$MW <- ladderdata[geldata$Band.ID, "MW"]
 
 
 # Fit the data to a straight line, with a logarithmic scaling
