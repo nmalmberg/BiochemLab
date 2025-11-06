@@ -1,0 +1,64 @@
+---
+title: "Lipid Lab"
+author: "Nathan Malmberg"
+date: "6/28/2019"
+output: 
+  bookdown::html_document2:
+    number_sections: FALSE
+bibliography: [knitr.bib, references.bib]
+csl: american-chemical-society.csl
+abstract: (ref:abstract)
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+(ref:abstract) Replace this sentence with your abstract.
+
+
+This lab report will require an introduction that has at least two citations
+of the primary literature, so be sure to add those to the references.bib file.
+
+Use the code block below for your calculations of the relative mobilities of
+the different lipids run on the TLC plate. The block will create a table
+of mobility factors for each lipid.
+
+(ref:tlctable) Write your caption for your TLC table here.
+
+```{r tlc}
+tlcdata <- read.csv(header = TRUE, stringsAsFactors = TRUE, text = "
+Lipid,Distance")
+# You'll need to calculate the mobility factors before the table can print them
+
+knitr::kable(tlcdata[c("Lipid","Rf")],caption = "(ref:tlctable)")
+```
+
+The code block below will create a plot of your TLC trace. Make sure you save
+your trace file to your project folder.
+
+```{r gc, fig.cap="(ref:gc)"}
+gctable <- read.table("nutmeg.xy", header = FALSE, col.names = c("Time","Response"))
+plot(Response~Time, data = gctable, xlab="Time (min)", ylab = "Response",
+     pty=0, lty=1)
+```
+
+(ref:gc) Write your caption for the GC trace here.
+
+As always, don't forget to cite your sources as appropriate.
+Make sure you have two articles from the primary literature in your
+references file to cite in your introduction.
+
+```{r references, include=FALSE}
+knitr::write_bib(c("base"), "knitr.bib")
+```
+
+## References
+
+<div id="refs"></div>
+
+## Appendix
+```{r ref.label=knitr::all_labels(), echo=TRUE, eval=FALSE}
+
+```
+
