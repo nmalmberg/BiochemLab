@@ -3,7 +3,6 @@ channels:
  - conda-forge
  - bioconda
 dependencies:
- - rstudio
  - r-catools
  - r-bookdown
  - r-units

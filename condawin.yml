@@ -1,6 +1,6 @@
 name: biochem
-#channels:
-# - conda-forge
+channels:
+ - conda-forge
 dependencies:
  - rstudio
  - r-catools
