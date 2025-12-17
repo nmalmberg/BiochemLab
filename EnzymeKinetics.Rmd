@@ -191,8 +191,7 @@ easier. This plot will require a detailed caption, which can be written below.
 ### so that the axes are scaled correctly, and then add separate points with
 ### different symbols.
 plot(Rate ~ Concentration, data=Substrates, type="n",
-     xlab=make_unit_label("'[Dopa]'",Substrates$Concentration),
-     ylab=make_unit_label("V[0]",Substrates$Rate))
+     xlab="'[Dopa]'",ylab="V[0]")
 for (substrate in 1:length(substratelevels)) {
   points(Rate ~ Concentration, data=Substrates, pch=substrate,
          subset=(Substrate==substratelevels[substrate]))
@@ -309,8 +308,7 @@ knitr::kable(inhibitortable, caption = "(ref:analysis)",
 
 ```{r inhibitorplot, fig.cap="(ref:inhibitor)",fig.asp=0.7}
 plot(Rate ~ SubCon, data=inhibitordata, type="n",
-     xlab=make_unit_label("'[Dopa]'",inhibitordata$SubCon),
-     ylab=make_unit_label("V[0]",inhibitordata$Rate))
+     xlab="'[Dopa]'", ylab="V[0]")
 points(Rate ~ SubCon, data=inhibitordata, pch=1,
        subset=(Inhibitor==set_units(0,mL)))
 ### You may have to adjust Inhibitor if you used a different volume.
