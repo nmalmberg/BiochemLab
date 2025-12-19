@@ -22,7 +22,7 @@ following code block only needs to be run once.
 
 ```{r installation, eval=FALSE, include=FALSE}
 if (!requireNamespace("Biostrings", quietly = TRUE))
-  BiocManager::install("Biostrings")
+  BiocManager::install(c("Biostrings","pwalign"))
 ```
 
 This lab report will require an introduction that has at least two citations
@@ -110,8 +110,8 @@ for (primer in levels(omrf$Primer)){
     }
     # Use Biostrings function to read FASTA.
     referenceseq <- Biostrings::readDNAStringSet(referencefile)
-    align <- Biostrings::pairwiseAlignment(pattern=sequences, subject=referenceseq)
-    Biostrings::writePairwiseAlignments(align)
+    align <- pwalign::pairwiseAlignment(pattern=sequences, subject=referenceseq)
+    pwalign::writePairwiseAlignments(align)
   }
 }
 ```
